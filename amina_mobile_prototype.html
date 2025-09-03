@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Amina — Protótipo Mobile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-grad-1: #EADCF9; /* lilás suave */
+      --bg-grad-2: #E0D4FF;
+      --emerald: #2AA77A;
+      --gold: #D4AF37;
+      --white: #FFFFFF;
+      --muted: #9DA3AE;
+      --card-shadow: 0 6px 18px rgba(26,18,41,0.08);
+      --radius: 18px;
+    }
+    /* Reset */
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, Nunito, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background:linear-gradient(180deg,var(--bg-grad-1),var(--bg-grad-2)); color:#1B1B1B}
+
+    /* Mobile frame to visualize prototype */
+    .phone{width:375px;max-width:94vw;margin:18px auto;border-radius:36px;overflow:hidden;background:var(--white);box-shadow:0 20px 40px rgba(12,12,20,0.12)}
+    header{padding:16px 18px;background:linear-gradient(135deg, rgba(234,220,249,0.95), rgba(224,212,255,0.95));display:flex;align-items:center;gap:12px}
+
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo .mark{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--emerald),#8BE0C7);display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:700;font-size:20px;box-shadow:0 6px 18px rgba(41,128,78,0.12)}
+    .logo h1{font-size:18px;margin:0;font-weight:700}
+    .logo p{margin:0;font-size:12px;color:var(--muted)}
+
+    /* Screens container */
+    .screen{padding:18px;min-height:640px;background:linear-gradient(180deg,transparent,rgba(250,250,252,0.6));}
+    .center{display:flex;align-items:center;justify-content:center}
+
+    /* Splash */
+    .splash{min-height:520px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px}
+    .splash .app-name{font-family:Nunito, Inter;font-size:36px;color:#3C1B5A;margin:6px 0}
+    .slogan{color:#5E4A78;margin-bottom:16px}
+    .splash .cta{margin-top:22px;padding:12px 22px;border-radius:999px;background:var(--emerald);color:var(--white);border:none;font-weight:700;box-shadow:0 8px 22px rgba(42,167,122,0.16)}
+
+    /* Login */
+    .auth{background:rgba(255,255,255,0.95);padding:18px;border-radius:16px;box-shadow:var(--card-shadow)}
+    .auth .illustration{height:120px;border-radius:12px;background:linear-gradient(90deg,#FFEAF7, #EAF7FF);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+    .auth button{width:100%;padding:12px;border-radius:12px;border:0;margin-top:8px;font-weight:600}
+    .btn-email{background:#6C4BA5;color:var(--white)}
+    .btn-google{background:linear-gradient(90deg,#FFF1F0,#FAF8EA);color:#333;border:1px solid rgba(0,0,0,0.06)}
+    .btn-fb{background:#1877F2;color:var(--white)}
+
+    /* Home */
+    .home-header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .diagnostic-card{background:linear-gradient(90deg,#8E6BC9,#8BE0C7);padding:16px;border-radius:16px;color:var(--white);display:flex;align-items:center;gap:12px;box-shadow:0 8px 22px rgba(138,106,201,0.14)}
+    .shortcuts{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px}
+    .card{background:var(--white);border-radius:12px;padding:12px;box-shadow:var(--card-shadow);display:flex;align-items:center;gap:12px}
+    .card .icon{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,#FFF,#F5F7FF);display:flex;align-items:center;justify-content:center;font-weight:700}
+
+    /* Bottom nav */
+    nav.bottom{position:sticky;bottom:0;display:flex;gap:6px;padding:10px;background:linear-gradient(180deg,transparent,rgba(250,250,252,0.9));justify-content:space-around}
+    nav.bottom button{flex:1;background:transparent;border:0;padding:10px;border-radius:12px;font-weight:600;color:var(--muted)}
+    nav.bottom .active{background:linear-gradient(90deg,#F3E9FF,#E8FFF6);color:#3C1B5A}
+
+    /* Diagnosis screen */
+    .question{background:var(--white);padding:12px;border-radius:12px;margin-bottom:10px;box-shadow:var(--card-shadow)}
+    .question h3{margin:0 0 6px 0;font-size:14px}
+    .options{display:flex;gap:8px;flex-wrap:wrap}
+    .option{padding:8px 12px;border-radius:999px;border:1px solid #EFEFF2;background:#FFF;font-weight:600}
+    .option.active{background:linear-gradient(90deg,#DCC8FF,#CFF6E9);border-color:transparent}
+
+    .result{background:linear-gradient(90deg,#FFF8EC,#EAF9F0);padding:14px;border-radius:12px}
+    .routine-items{display:flex;gap:8px;margin-top:8px}
+    .routine-item{background:#fff;padding:8px;border-radius:10px;box-shadow:var(--card-shadow);display:flex;flex-direction:column;align-items:center;gap:6px;width:100px}
+
+    /* Agenda / Calendar simplified */
+    .calendar{background:var(--white);padding:12px;border-radius:12px;box-shadow:var(--card-shadow)}
+    .days{display:flex;justify-content:space-between;margin-top:8px}
+    .day{width:14%;text-align:center;padding:8px;border-radius:8px}
+    .reminder{display:flex;align-items:center;justify-content:space-between;padding:10px;margin-top:8px;background:#F8FFF7;border-radius:10px}
+
+    /* Library */
+    .search{display:flex;gap:8px;margin-bottom:12px}
+    .search input{flex:1;padding:10px;border-radius:10px;border:1px solid #EEE}
+    .thumbnails{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    .thumb{background:var(--white);border-radius:10px;padding:8px;box-shadow:var(--card-shadow);height:110px;display:flex;flex-direction:column;justify-content:space-between}
+
+    /* Community */
+    .post{background:var(--white);padding:12px;border-radius:12px;box-shadow:var(--card-shadow);margin-bottom:10px}
+    .post .meta{display:flex;align-items:center;gap:8px}
+    .post .meta img{width:40px;height:40px;border-radius:50%}
+    .post .actions{display:flex;gap:8px;margin-top:8px}
+    .fab{position:fixed;right:26px;bottom:86px;background:var(--emerald);width:56px;height:56px;border-radius:999px;display:flex;align-items:center;justify-content:center;color:white;font-size:28px;box-shadow:0 12px 30px rgba(42,167,122,0.16)}
+
+    /* Salões */
+    .map{height:160px;border-radius:12px;background:linear-gradient(90deg,#F4F7FF,#F7FFF2);display:flex;align-items:center;justify-content:center;margin-bottom:8px}
+    .salon-list{display:flex;flex-direction:column;gap:8px}
+    .salon{display:flex;gap:10px;align-items:center;padding:10px;background:var(--white);border-radius:12px;box-shadow:var(--card-shadow)}
+
+    /* Perfil */
+    .profile{display:flex;gap:12px;align-items:center}
+    .avatar{width:72px;height:72px;border-radius:14px;background:linear-gradient(90deg,#FFDDAA,#FFEFD6);display:flex;align-items:center;justify-content:center;font-weight:700}
+    .progress{background:#F2F7F5;border-radius:12px;padding:8px;margin-top:8px}
+    .progress .bar{height:10px;background:linear-gradient(90deg,var(--emerald),#8BE0C7);width:60%;border-radius:999px}
+
+    /* Accessibility */
+    button:focus, .option:focus{outline:3px solid rgba(170,145,255,0.25)}
+
+    /* small details */
+    .muted{color:var(--muted);font-size:13px}
+    .gold-dot{width:10px;height:10px;background:var(--gold);border-radius:50%}
+
+    @media (max-width:380px){.phone{width:94vw}}
+  </style>
+</head>
+<body>
+  <div class="phone" role="application" aria-label="Protótipo do app Amina">
+    <header>
+      <div class="logo" aria-hidden>
+        <div class="mark">A</div>
+        <div>
+          <h1>Amina</h1>
+          <p class="muted">Cuidados para cabelos cacheados</p>
+        </div>
+      </div>
+      <div style="margin-left:auto;font-size:12px;color:var(--muted)">Protótipo</div>
+    </header>
+
+    <main class="screen" id="app-screen">
+      <!-- S: Splash -->
+      <section id="splash" class="splash" aria-hidden="false">
+        <div style="width:140px;height:140px;border-radius:28px;background:linear-gradient(135deg,#F5E6FF,#E9FFF0);display:flex;align-items:center;justify-content:center;box-shadow:0 14px 30px rgba(60,27,90,0.08)">
+          <!-- small illustrative curl mark -->
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" aria-hidden>
+            <path d="M12 2c3.5 0 6 2.2 6 5.8 0 3.8-3 6.2-6 6.2" stroke="#3C1B5A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 9.5C6 6.7 8.6 5 12 5" stroke="#3C1B5A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="app-name">Amina</div>
+        <div class="slogan">Sua rotina capilar em um só lugar</div>
+        <button class="cta" onclick="goTo('auth')" aria-label="Entrar no Amina">Começar</button>
+      </section>
+
+      <!-- S: Auth -->
+      <section id="auth" class="auth" style="display:none" aria-hidden="true">
+        <div class="illustration" role="img" aria-label="Ilustração pessoas diversas com cabelos cacheados">
+          <!-- placeholder illustration -->
+          <div style="text-align:center">
+            <svg width="160" height="80" viewBox="0 0 160 80" fill="none">
+              <rect x="4" y="6" rx="10" width="48" height="68" fill="#FFF"></rect>
+              <rect x="56" y="6" rx="10" width="48" height="68" fill="#FFF"></rect>
+              <rect x="108" y="6" rx="10" width="48" height="68" fill="#FFF"></rect>
+            </svg>
+          </div>
+        </div>
+        <p style="margin:6px 0 10px 0;font-weight:700">Bem-vinda(o) de volta</p>
+        <button class="btn-email" onclick="goTo('home')">Entrar com e-mail</button>
+        <button class="btn-google">Entrar com Google</button>
+        <button class="btn-fb">Entrar com Facebook</button>
+        <div style="margin-top:10px;text-align:center;color:var(--muted);font-size:13px">Ainda não tem conta? <a href="#" onclick="alert('Fluxo de cadastro (protótipo)')">Cadastre-se</a></div>
+      </section>
+
+      <!-- S: Home -->
+      <section id="home" style="display:none" aria-hidden="true">
+        <div class="home-header">
+          <div>
+            <div style="font-size:13px;color:var(--muted)">Olá, <strong>Andres</strong></div>
+            <div class="muted">Como está seu cabelo hoje?</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="display:flex;flex-direction:column;align-items:flex-end">
+              <div class="muted" style="font-size:11px">Progresso</div>
+              <div style="font-weight:700">60%</div>
+            </div>
+            <div style="width:46px;height:46px;border-radius:12px;background:linear-gradient(90deg,#FFDDAA,#FFEFD6);display:flex;align-items:center;justify-content:center">AM</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="diagnostic-card" role="button" tabindex="0" onclick="goTo('diagnostic')" aria-label="Iniciar diagnóstico capilar">
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700">Diagnóstico Capilar</div>
+              <div style="font-size:12px;opacity:0.95;margin-top:6px">Descubra sua rotina personalizada</div>
+            </div>
+            <div style="width:56px;height:56px;border-radius:12px;background:rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center;font-weight:800">🔬</div>
+          </div>
+
+          <div class="shortcuts">
+            <div class="card" onclick="goTo('routine')">
+              <div class="icon">📅</div>
+              <div>
+                <div style="font-weight:700">Minha Rotina</div>
+                <div class="muted">Agenda e lembretes</div>
+              </div>
+            </div>
+            <div class="card" onclick="goTo('library')">
+              <div class="icon">🎬</div>
+              <div>
+                <div style="font-weight:700">Vídeos e Tutoriais</div>
+                <div class="muted">Aprenda com especialistas</div>
+              </div>
+            </div>
+            <div class="card" onclick="goTo('salons')">
+              <div class="icon">📍</div>
+              <div>
+                <div style="font-weight:700">Salões Perto de Você</div>
+                <div class="muted">Profissionais especializados</div>
+              </div>
+            </div>
+            <div class="card" onclick="goTo('community')">
+              <div class="icon">🤝</div>
+              <div>
+                <div style="font-weight:700">Dicas da Comunidade</div>
+                <div class="muted">Troque experiências</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <div style="font-weight:700">Para você</div>
+            <div class="muted" style="font-size:12px">Ver tudo</div>
+          </div>
+
+          <div style="display:flex;gap:8px;overflow:auto;padding-bottom:6px">
+            <div class="card" style="min-width:180px;flex:0 0 auto">
+              <div class="icon">✨</div>
+              <div>
+                <div style="font-weight:700">Transição Capilar</div>
+                <div class="muted">Histórias e guias</div>
+              </div>
+            </div>
+            <div class="card" style="min-width:180px;flex:0 0 auto">
+              <div class="icon">💧</div>
+              <div>
+                <div style="font-weight:700">Minha Rotina</div>
+                <div class="muted">Ver calendário</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S: Diagnostic -->
+      <section id="diagnostic" style="display:none" aria-hidden="true">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div style="font-weight:700">Diagnóstico Capilar</div>
+          <div class="muted">Progresso 1/5</div>
+        </div>
+
+        <div class="question">
+          <h3>Qual é o seu tipo de cacho?</h3>
+          <div class="options" role="list" aria-label="Opções de tipo de cacho">
+            <button class="option" onclick="toggleOpt(this)">1A/1B</button>
+            <button class="option" onclick="toggleOpt(this)">2A/2B</button>
+            <button class="option" onclick="toggleOpt(this)">3A/3B</button>
+            <button class="option" onclick="toggleOpt(this)">3C/4A+</button>
+          </div>
+        </div>
+
+        <div class="question">
+          <h3>Seu cabelo costuma ser...</h3>
+          <div class="options">
+            <button class="option" onclick="toggleOpt(this)">Oleoso</button>
+            <button class="option" onclick="toggleOpt(this)">Normal</button>
+            <button class="option" onclick="toggleOpt(this)">Seco</button>
+            <button class="option" onclick="toggleOpt(this)">Misto</button>
+          </div>
+        </div>
+
+        <div class="question">
+          <h3>Quais danos você percebe?</h3>
+          <div class="options">
+            <button class="option" onclick="toggleOpt(this)">Queda</button>
+            <button class="option" onclick="toggleOpt(this)">Pontas secas</button>
+            <button class="option" onclick="toggleOpt(this)">Frizz</button>
+            <button class="option" onclick="toggleOpt(this)">Quebra</button>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button onclick="showResult()" style="flex:1;padding:12px;border-radius:12px;background:var(--emerald);color:white;border:0">Ver sugestão de rotina</button>
+          <button onclick="goTo('home')" style="flex:1;padding:12px;border-radius:12px;background:#F1E7FF;border:0">Voltar</button>
+        </div>
+
+        <div id="resultArea" style="margin-top:14px;display:none">
+          <div class="result">
+            <div style="font-weight:700">Sugestão de rotina</div>
+            <div class="muted" style="font-size:13px;margin-top:6px">Alternância semanal entre hidratação, nutrição e reconstrução</div>
+            <div class="routine-items">
+              <div class="routine-item"><div style="font-size:22px">💧</div><div style="font-weight:700">Hidratação</div><div class="muted">1x/sem</div></div>
+              <div class="routine-item"><div style="font-size:22px">🥑</div><div style="font-weight:700">Nutrição</div><div class="muted">1x/sem</div></div>
+              <div class="routine-item"><div style="font-size:22px">🛠️</div><div style="font-weight:700">Reconstrução</div><div class="muted">1x/2sem</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S: Routine / Agenda -->
+      <section id="routine" style="display:none" aria-hidden="true">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:700">Minha Rotina</div>
+          <div class="muted">Próx. lembrete: 02/09 • 18:00</div>
+        </div>
+        <div class="calendar" style="margin-top:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div class="muted">Setembro</div>
+            <div style="display:flex;gap:6px"><button aria-label="voltar" onclick="alert('Mês anterior')">‹</button><button aria-label="avançar" onclick="alert('Próximo mês')">›</button></div>
+          </div>
+          <div class="days">
+            <div class="day muted">Seg</div><div class="day muted">Ter</div><div class="day muted">Qua</div><div class="day muted">Qui</div><div class="day muted">Sex</div><div class="day muted">Sáb</div><div class="day muted">Dom</div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:8px">
+            <div class="day" style="background:#EDE7FF;flex:1">1</div>
+            <div class="day" style="flex:1">2</div>
+            <div class="day" style="flex:1">3</div>
+            <div class="day" style="flex:1">4</div>
+            <div class="day" style="flex:1">5</div>
+            <div class="day" style="flex:1">6</div>
+            <div class="day" style="flex:1">7</div>
+          </div>
+
+          <div class="reminder">
+            <div>
+              <div style="font-weight:700">Hora da hidratação</div>
+              <div class="muted" style="font-size:13px">Hoje às 18:00</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+              <button onclick="markDone(this)" aria-pressed="false" style="padding:8px 10px;border-radius:10px;border:0;background:var(--emerald);color:white">Marcar como feita</button>
+              <div class="muted" style="font-size:12px">Notificação personalizada ativada</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S: Library -->
+      <section id="library" style="display:none" aria-hidden="true">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:700">Biblioteca</div>
+          <div class="muted">Filtros</div>
+        </div>
+        <div class="search" style="margin-top:10px">
+          <input type="search" placeholder="Buscar: Finalização, Tranças..." aria-label="Buscar conteúdo" />
+          <button style="padding:10px;border-radius:10px;border:0;background:var(--emerald);color:white">🔍</button>
+        </div>
+        <div style="font-weight:700;margin-bottom:8px">Vídeos e Tutoriais</div>
+        <div class="thumbnails">
+          <div class="thumb">
+            <div style="background:linear-gradient(90deg,#FFF6F0,#F9F7FF);height:68px;border-radius:8px;display:flex;align-items:center;justify-content:center">Thumbnail</div>
+            <div style="font-size:13px;font-weight:700">Finalização fácil</div>
+          </div>
+          <div class="thumb">
+            <div style="background:linear-gradient(90deg,#F0FFF4,#FFF7FF);height:68px;border-radius:8px;display:flex;align-items:center;justify-content:center">Thumbnail</div>
+            <div style="font-size:13px;font-weight:700">Tranças protetoras</div>
+          </div>
+          <div class="thumb">
+            <div style="background:linear-gradient(90deg,#FFF6F0,#F9F7FF);height:68px;border-radius:8px;display:flex;align-items:center;justify-content:center">Thumbnail</div>
+            <div style="font-size:13px;font-weight:700">Cortes para transição</div>
+          </div>
+          <div class="thumb">
+            <div style="background:linear-gradient(90deg,#F0FFF4,#FFF7FF);height:68px;border-radius:8px;display:flex;align-items:center;justify-content:center">Thumbnail</div>
+            <div style="font-size:13px;font-weight:700">Cronograma capilar</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S: Community -->
+      <section id="community" style="display:none" aria-hidden="true">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:700">Comunidade</div>
+          <div class="muted">Desafios</div>
+        </div>
+        <div style="margin-top:10px">
+          <div class="post">
+            <div class="meta"><img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'></svg>" alt="avatar"><div><div style="font-weight:700">Luana</div><div class="muted" style="font-size:12px">2h atrás</div></div></div>
+            <div style="margin-top:8px">Comecei o desafio dos 30 dias de cronograma e já notei menos frizz! 💜</div>
+            <div class="actions"><button>Curtir</button><button>Comentar</button><button>Compartilhar</button></div>
+          </div>
+
+          <div class="post">
+            <div class="meta"><img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'></svg>" alt="avatar"><div><div style="font-weight:700">Marcos</div><div class="muted" style="font-size:12px">1d</div></div></div>
+            <div style="margin-top:8px">Alguém tem indicação de um bom leave-in para cabelos 3C?</div>
+            <div class="actions"><button>Curtir</button><button>Comentar</button><button>Compartilhar</button></div>
+          </div>
+        </div>
+
+        <button class="fab" aria-label="Adicionar postagem" onclick="alert('Criar post (protótipo)')">+</button>
+      </section>
+
+      <!-- S: Salons -->
+      <section id="salons" style="display:none" aria-hidden="true">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:700">Salões</div>
+          <div class="muted">Mapa</div>
+        </div>
+        <div class="map" style="margin-top:10px">Mapa interativo (protótipo)</div>
+        <div class="salon-list">
+          <div class="salon"><div style="width:64px;height:64px;border-radius:10px;background:linear-gradient(90deg,#FFF6F0,#F9F7FF);display:flex;align-items:center;justify-content:center">Img</div><div style="flex:1"><div style="font-weight:700">Cachos & Cia</div><div class="muted">São Paulo • ★4.8</div></div><div class="gold-dot" title="Top recomendado"></div></div>
+          <div class="salon"><div style="width:64px;height:64px;border-radius:10px;background:linear-gradient(90deg,#F0FFF4,#FFF7FF);display:flex;align-items:center;justify-content:center">Img</div><div style="flex:1"><div style="font-weight:700">Ateliê Crespo</div><div class="muted">Santo André • ★4.6</div></div><div style="color:var(--muted);font-size:12px">5km</div></div>
+        </div>
+      </section>
+
+      <!-- S: Profile -->
+      <section id="profile" style="display:none" aria-hidden="true">
+        <div class="profile">
+          <div class="avatar">AM</div>
+          <div>
+            <div style="font-weight:700">Andres Martins</div>
+            <div class="muted">Tipo de cabelo: 3C • Rotina: Hidratação</div>
+            <div class="progress"><div style="font-size:12px">Progresso da rotina</div><div class="bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div></div>
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <button style="width:100%;padding:12px;border-radius:12px;border:0;background:#FFF6E6">Configurar lembretes</button>
+        </div>
+      </section>
+
+    </main>
+
+    <nav class="bottom" role="navigation" aria-label="Menu principal">
+      <button id="nav-home" class="active" onclick="switchTab('home')">Início</button>
+      <button id="nav-routine" onclick="switchTab('routine')">Rotina</button>
+      <button id="nav-library" onclick="switchTab('library')">Biblioteca</button>
+      <button id="nav-community" onclick="switchTab('community')">Comunidade</button>
+      <button id="nav-profile" onclick="switchTab('profile')">Perfil</button>
+    </nav>
+  </div>
+
+  <script>
+    // Simple screen/router for prototype
+    function goTo(id){
+      const sections = ['splash','auth','home','diagnostic','routine','library','community','salons','profile'];
+      sections.forEach(s=>{
+        const el = document.getElementById(s);
+        if(!el) return;
+        if(s===id){el.style.display='block';el.setAttribute('aria-hidden','false')}else{el.style.display='none';el.setAttribute('aria-hidden','true')}
+      });
+      // update nav highlight
+      const navMap = {home:'nav-home', routine:'nav-routine', library:'nav-library', community:'nav-community', profile:'nav-profile'};
+      Object.values(navMap).forEach(id=>document.getElementById(id)?.classList.remove('active'));
+      if(navMap[id]) document.getElementById(navMap[id]).classList.add('active');
+    }
+    function switchTab(id){
+      goTo(id);
+      // scroll to top of screen area
+      document.getElementById('app-screen').scrollTop=0;
+    }
+    function toggleOpt(btn){
+      btn.classList.toggle('active');
+      btn.setAttribute('aria-pressed', btn.classList.contains('active'));
+    }
+    function showResult(){
+      document.getElementById('resultArea').style.display='block';
+      document.querySelector('#diagnostic .muted')?.focus();
+    }
+    function markDone(btn){
+      btn.innerText='Concluído ✓';
+      btn.setAttribute('disabled', 'true');
+      btn.style.opacity=0.9;
+    }
+    // Start on splash
+    goTo('splash');
+  </script>
+</body>
+</html>
